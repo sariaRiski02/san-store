@@ -1,0 +1,279 @@
+openapi: '3.0.3'
+info:
+  title: Api san-store
+  version: '1.0'
+  description: API for san store
+servers:
+  - url: https://mrizkysaria.netlify.app/v1
+
+paths:
+  /user:
+    post:
+      tags:
+        - Auth
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: "string"
+                password:
+                  type: "string"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example : 2 | eringeoteileoejospdfj
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: UUID-1
+                      name:
+                        type: string
+                        example: Rizky
+                      password:
+                        type: string
+                        example: secret
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object          
+  /product:
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - price
+                - code
+              properties:
+
+                name:
+                  type: string
+                code:
+                  type: number
+                  example: 43438093423402834809
+                quantity:
+                  type: number
+                price:
+                  type: number
+      responses:
+        '200':
+          description: "Add product success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  code:
+                    type: number
+                  quantity:
+                    type: number
+                  price:
+                    type: number
+        '400':
+          description: Add Product error
+          content:
+            application/json:
+              schema:
+                type: object
+    get:
+      security:
+        - BearerAuth: []
+      
+      tags:
+        - Product
+      responses:
+        '200':
+          description: Get all product success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  code:
+                    type: number
+                  quantity:
+                    type: number
+                  price:
+                    type:  number
+        '400':
+          description: Get all product Error
+          content:
+            application/json:
+              schema:
+                type: object
+  /product/{id}:
+    put:
+      security:
+        - BearerAuth: []
+      
+      tags:
+        - Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                code:
+                  type: number
+                quantity:
+                  type: number
+                price:
+                  type: number
+                
+      responses:
+        '200':
+          description: Update product success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  code:
+                    type: number
+                  quantity:
+                    type: number
+                  price:
+                    type: number
+        '400':
+          description: Error update product
+          content:
+            application/json:
+              schema:
+                type: object
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - Product
+      responses:
+        '200':
+          description: Get product success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  code:
+                    type: number
+                  quantity:
+                    type: number
+                  price:
+                    type:  number
+        '400':
+          description: Get product Error
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      security:
+        - BearerAuth: []      
+      tags:
+        - Product
+      
+      parameters:
+        - name: Authorization
+          in: path
+          description: 'product delete'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Delete product success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: Delete product {id} success
+        '400':
+          description: "Delete product Error"
+          content:
+            application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: "Error"
+                    message:
+                      type: string
+                      example: Delete product {id} Error
+            
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+  responses:
+    Unauthorized:
+      description: Tidak terautentikasi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized"
+
+
+          
+            
+                      
+      
+                
+
+                  
+                    
+
+          
+    
