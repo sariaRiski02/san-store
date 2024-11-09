@@ -18,18 +18,25 @@ class UserController extends Controller
 
         if ($credential->fails()) {
             return response()->json([
+                "status" => "error",
                 "error" => $credential->errors()
             ], 422);
         }
 
-        if (!Auth::attempt($credential)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!Auth::attempt($credential->validated())) {
+            return response()->json([
+                'status' => "error",
+                'error' => 'Unauthorized'
+            ], 401);
         }
 
         $user = Auth::user();
         if ($user instanceof User) {
             $token = $user->createToken("san-store")->plainTextToken;
-            return response()->json(['token' => $token], 200);
+            return response()->json([
+                'status' => 'success',
+                'token' => $token
+            ], 200);
         }
     }
 }
