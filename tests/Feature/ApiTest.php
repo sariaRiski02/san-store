@@ -31,6 +31,7 @@ class ApiTest extends TestCase
             "email" => "test@example.com",
         ]);
         $this->assertSame($responseMissingPassword["status"], "error");
+
         // test missing password
         $responseMissingEmail = $this->post("/api/login", [
             "password" => "test123",
