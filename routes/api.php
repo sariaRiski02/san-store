@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
-Route::post('/login', [UserController::class, 'login'])->name("login");
+Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware(["auth:sanctum"])->group(function () {
     Route::post('/product', [ProductController::class, 'add']);
