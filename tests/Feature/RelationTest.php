@@ -40,7 +40,6 @@ class RelationTest extends TestCase
         $category = $product->category();
         $this->assertInstanceOf(BelongsTo::class, $category);
     }
-
     public function test_getData_product_and_category()
     {
         $product = Product::first();
@@ -57,7 +56,6 @@ class RelationTest extends TestCase
 
 
     // Test for relation between product and product detail
-
     public function test_relation_success_product_and_product_detail()
     {
         // Check if product has relation with product detail
@@ -80,8 +78,6 @@ class RelationTest extends TestCase
         $product = $productDetail->product();
         $this->assertInstanceOf(BelongsTo::class, $product);
     }
-
-
     public function test_getData_product_and_productDetail()
     {
         $product = Product::first();
