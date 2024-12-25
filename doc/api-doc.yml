@@ -52,6 +52,12 @@ paths:
                       email:
                         type: string
                         example: JohnDoe@example.com
+                      created_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
+                      updated_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
         '400':
           description: Bad Request
           content:
@@ -849,7 +855,6 @@ paths:
                   message:
                     type: string
                     example: Server error
-
   /seles/check/{code_product}:
     get:
       tags:
@@ -955,8 +960,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: Server error    
-      
+                    example: Server error       
   /seles:
     post:
       tags:
@@ -1125,7 +1129,7 @@ paths:
                   message:
                     type: string
                     example: Server error
-
+  
 
 
 
