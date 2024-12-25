@@ -1,0 +1,1131 @@
+openapi: '3.0.3'
+info:
+  title: San-store API
+  version: '1.0'
+servers:
+  - url: https://api.san-store/v1
+paths:
+
+  /register:
+    post:
+      summary: Register a new user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: User registered successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: John Doe
+                      email:
+                        type: string
+                        example: JohnDoe@example.com
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Invalid request data
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: User already exists
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Validation errors
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Name is required
+                      email:
+                        type: string
+                        example: Email is required
+                      password:
+                        type: string
+                        example: Password is required
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error        
+  /login:
+    post:
+      summary: Login a user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: User logged in successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: John Doe
+                      email:
+                        type: string
+                        example: test
+
+                  token:
+                    type: string
+                    example: berer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Invalid request data'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Invalid credentials
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Validation errors
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: Email is required
+                      password:
+                        type: string
+                        example: Password is required
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error
+  /logout:
+    post:
+      summary: Logout a user
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: User logged out successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error
+  /products:
+    post:
+      summary: Create a new product
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Roti
+                description:
+                  type: string
+                  nullable: true
+                categories:
+                  type: string
+                  example: food
+                base_unit:
+                  type: string
+                  example: lusin
+                quantity_base_unit:
+                  description: Quantity of base unit
+                  type: number
+                  example: 3
+                factor_base_unit:
+                  description: Factor of base unit or quantity unit in base unit
+                  type: number
+                  example: 12
+                quantity_unit:
+                  description: Quantity of unit
+                  type: number
+                  example: 36
+                base_price:
+                  type: number
+                  example: 30000
+                unit_price:
+                  type: number
+                  example: 1000
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product created successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Roti
+                        categories:
+                          type: string
+                          example: food
+                        description:
+                          type: string
+                          example: Product 1 description
+                        base_unit:
+                          type: string
+                          example: lusin
+                        factor_base_unit:
+                          type: number
+                          example: 12
+                        base_price:
+                          type: number
+                          example: 30000
+                        unit_price:
+                          type: number
+                          example: 1000
+                        stock:
+                          type: object
+                          properties:
+                            quantity_base_unit:
+                              type: number
+                              example: 3
+                            quantity_unit:
+                              type: number
+                              example: 36
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Invalid request data
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Validation errors
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Name is required
+                      description:
+                        type: string
+                        example: Description is required
+                      base_unit:
+                        type: string
+                        example: Base unit is required
+                      base_price:
+                        type: string
+                        example: Base price is required
+                      unit_price:
+                        type: string
+                        example: 
+    get:
+      summary: Get all products
+      tags:
+        - Products
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Products retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Roti
+                        categories:
+                          type: string
+                          example: food
+                        description:
+                          type: string
+                          example: Product 1 description
+                        base_unit:
+                          type: string
+                          example: lusin
+                        factor_base_unit:
+                          type: number
+                          example: 10
+                        base_price:
+                          type: number
+                          example: 72000
+                        unit_price:
+                          type: number
+                          example: 12000
+                        stock:
+                          type: object
+                          properties:
+                            quantity_base_unit:
+                              type: number
+                              example: 6
+                            quantity_unit:
+                              type: number
+                              example: 60
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error
+  /products/{id}:
+    put:
+      summary: Update a product
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the product to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Product 1
+                categories:
+                  type: string
+                  example: food
+                description:
+                  type: string
+                  nullable: true
+                base_unit:
+                  type: string
+                  example: lusin
+                quantity_base_unit:
+                  description: Quantity of base unit
+                  type: number
+                  example: 3
+                factor_base_unit:
+                  description: Factor of base unit or quantity unit in base unit
+                  type: number
+                  example: 12
+                quantity_unit:
+                  description: Quantity of unit
+                  type: number
+                  example: 1
+                base_price:
+                  type: number
+                  example: 100000
+                unit_price:
+                  type: number
+                  example: 10000
+                
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product updated successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Product 1
+                      categories:
+                        type: string
+                        example: food
+                      description:
+                        type: string
+                        example: Product 1 description
+                      base_unit:
+                        type: string
+                        example: lusin
+                      factor_base_unit:
+                        type: number
+                        example: 12
+                      stock:
+                        type: object
+                        properties:
+                          quantity_base_unit:
+                            type: number
+                            example: 3
+                          quantity_unit:
+                            type: number
+                            example: 36
+                      base_price:
+                        type: number
+                        example: 72000
+                      unit_price:
+                        type: number
+                        example: 12000
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Invalid request data
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Product not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Validation errors
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Name is required
+                      description:
+                        type: string
+                        example: Description is required
+                      base_unit:
+                        type: string
+                        example: Base unit is required
+                      base_price:
+                        type: string
+                        example: Base price is required
+                      unit_price:
+                        type: integer
+                        example: 
+    delete:
+      summary: Delete a product
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the product to delete
+          schema:
+            type: array
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Product not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error
+    get:
+      summary: Get a product
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the product to get
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Roti
+                      categories:
+                        type: string
+                        example: food
+                      description:
+                        type: string
+                        example: Product 1 description
+                      base_unit:
+                        type: string
+                        example: lusin
+                      factor_base_unit:
+                        type: number
+                        example: 10
+                      base_price:
+                        type: number
+                        example: 72000
+                      unit_price:
+                        type: number
+                        example: 12000
+                      stock:
+                        type: object
+                        properties:
+                          quantity_base_unit:
+                            type: number
+                            example: 6
+                          quantity_unit:
+                            type: number
+                            example: 60
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Product not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error
+
+  /seles/check/{code_product}:
+    get:
+      tags:
+        - Seles
+      summary: Check product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: code_product
+          in: path
+          required: true
+          description: code item of the product to Check
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      
+                      id_product:
+                        type: string
+                        example: 1  
+                      name:
+                        type: string
+                        example: Roti
+                      categories:                
+                        type: string
+                        example: food
+                      base_unit:
+                        type: string
+                        example: lusin
+                      factor_base_unit:
+                          type: number
+                          example: 12
+                      stock:
+                        type: object
+                        properties:
+                          
+                          quantity_base_unit:
+                            type: number
+                            example: 3
+                          quantity_unit:
+                            type: number
+                            example: 36
+
+                      price:
+                        type: object
+                        properties:
+                          base_price:
+                            type: number
+                            example: 72000
+                          unit_price:
+                            type: number
+                            example: 12000
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Product not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error    
+      
+  /seles:
+    post:
+      tags:
+        - Seles
+      summary: Create a new seles
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  product_id:
+                    type: integer
+                    example: 1
+                  code_item:
+                    type: string
+                    example: xxxxxxxxxxx
+                  quantity_base_unit:
+                    type: number
+                    example: 3
+                  quantity_unit:
+                    type: number
+                    example: 36
+                  price:
+                    type: number
+                    example: 1000
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Seles created successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: id_seles
+                      user_id:
+                        type: integer
+                        example: 1
+                      customer_id:
+                        type: integer
+                        example: 1
+                      invoice_number:
+                        type: string
+                        example: SAN-12092025-NT1
+                      payment_method:
+                        type: string
+                        example: cash
+                      paymat_status:
+                        type: string
+                        example: paid
+                      total_amount:
+                        type: number
+                        example: 150000
+                      sale_detail:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product_id:
+                              type: integer
+                              example: 1
+                            code_item:
+                              type: string
+                              example: xxxxxxxxxxx
+                            quantity_base_unit:
+                              type: number
+                              example: 3
+                            quantity_unit:
+                              type: number
+                              example: 36
+                            price:
+                              type: number
+                              example: 1000
+                            subtotal:
+                              type: number
+                              example: 150000
+                            created_at:
+                              type: string
+                              example: 2021-09-12 12:00:00
+                            updated_at:
+                              type: string
+                              example: 2021-09-12 12:00:00
+                      created_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
+                      updated_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Invalid request data
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Validation errors
+                  errors:
+                    type: object
+                    properties:
+                      product_id:
+                        type: string
+                        example: Product ID is required
+                      quantity:
+                        type: string
+                        example: Quantity is required
+                      price:
+                        type: string
+                        example: Price is required
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Server error
+
+
+
+
