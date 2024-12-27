@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Stock;
 use App\Models\Category;
 use App\Models\ProductDetail;
 use Illuminate\Database\Eloquent\Model;
@@ -30,5 +31,10 @@ class Product extends Model
     public function product_detail()
     {
         return $this->hasOne(ProductDetail::class);
+    }
+
+    public function stock()
+    {
+        return $this->hasOne(Stock::class);
     }
 }

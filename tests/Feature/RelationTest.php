@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductDetail;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RelationTest extends TestCase
 {
-
     // Test for relation between category and product
     public function test_relation_success_category_and_product()
     {
@@ -53,8 +53,6 @@ class RelationTest extends TestCase
             $this->assertSame($category->id, $product->first()->category_id);
         }
     }
-
-
     // Test for relation between product and product detail
     public function test_relation_success_product_and_product_detail()
     {
@@ -87,5 +85,39 @@ class RelationTest extends TestCase
         $productDetail = ProductDetail::first();
         $product = $productDetail->product;
         $this->assertSame($productDetail->product_id, $product->id);
+    }
+    // Test for relation between product and stock
+    public function test_relation_success_product_and_stock()
+    {
+        // Check if product has relation with stock
+        $product = Product::first();
+        $stock = $product->stock;
+        $this->assertInstanceOf(Stock::class, $stock);
+
+        // Check if stock has relation with product
+        $stock = Stock::first();
+        $product = $stock->product;
+        $this->assertInstanceOf(Product::class, $product);
+
+        // Check if product has one stock
+        $product = Product::first();
+        $stock = $product->stock();
+        $this->assertInstanceOf(HasOne::class, $stock);
+
+        // Check if stock belongs to product
+        $stock = Stock::first();
+        $product = $stock->product();
+        $this->assertInstanceOf(BelongsTo::class, $product);
+    }
+    public function test_getData_product_and_stock()
+    {
+        $product = Product::first();
+        $stock = $product->stock;
+
+        $this->assertSame($product->id, $stock->product_id);
+
+        $stock = Stock::first();
+        $product = $stock->product;
+        $this->assertSame($stock->product_id, $product->id);
     }
 }

@@ -166,6 +166,13 @@ paths:
                       email:
                         type: string
                         example: test
+                      created_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
+                      updated_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
+                      
 
                   token:
                     type: string
@@ -348,8 +355,20 @@ paths:
                           type: string
                           example: Roti
                         categories:
-                          type: string
-                          example: food
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: food
+                            created_at:
+                              type: string
+                              example: 2021-09-12 12:00:00
+                            updated_at:
+                              type: string
+                              example: 2021-09-12 12:00:00
                         description:
                           type: string
                           example: Product 1 description
@@ -463,8 +482,20 @@ paths:
                           type: string
                           example: Roti
                         categories:
-                          type: string
-                          example: food
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: food
+                            created_at:
+                              type: string
+                              example: 2021-09-12 12:00:00
+                            updated_at:
+                              type: string
+                              example: 2021-09-12 12:00:00
                         description:
                           type: string
                           example: Product 1 description
@@ -489,6 +520,12 @@ paths:
                             quantity_unit:
                               type: number
                               example: 60
+                        created_at:
+                          type: string
+                          example: 2021-09-12 12:00:00
+                        updated_at:
+                          type: string
+                          example: 2021-09-12 12:00:00
         '401':
           description: Unauthorized
           content:
@@ -591,8 +628,20 @@ paths:
                         type: string
                         example: Product 1
                       categories:
-                        type: string
-                        example: food
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: food
+                          created_at:
+                            type: string
+                            example: 2021-09-12 12:00:00
+                          updated_at:
+                            type: string
+                            example: 2021-09-12 12:00:00
                       description:
                         type: string
                         example: Product 1 description
@@ -617,6 +666,13 @@ paths:
                       unit_price:
                         type: number
                         example: 12000
+                      created_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
+                      updated_at:
+                        type: string
+                        example: 2021-09-12 12:00:00
+                      
         '400':
           description: Bad Request
           content:
@@ -790,8 +846,20 @@ paths:
                         type: string
                         example: Roti
                       categories:
-                        type: string
-                        example: food
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: food
+                          created_at:
+                            type: string
+                            example: 2021-09-12 12:00:00
+                          updated_at:
+                            type: string
+                            example: 2021-09-12 12:00:00
                       description:
                         type: string
                         example: Product 1 description
