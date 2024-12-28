@@ -3,9 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Sale;
 use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Customer;
+use App\Models\SaleDetail;
 use App\Models\ProductDetail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -119,5 +122,72 @@ class RelationTest extends TestCase
         $stock = Stock::first();
         $product = $stock->product;
         $this->assertSame($stock->product_id, $product->id);
+    }
+
+    public function test_relation_success_sale_and_sale_details()
+    {
+        $sale = Sale::first();
+        $SaleDetail = $sale->sale_detail;
+        $this->assertInstanceOf(SaleDetail::class, $SaleDetail);
+
+        $hasOne = $sale->sale_detail();
+        $this->assertinstanceOf(HasOne::class, $hasOne);
+
+        $sale_detail = SaleDetail::first();
+        $sale = $sale_detail->sale;
+        $this->assertInstanceOf(Sale::class, $sale);
+
+        $belongsTo = $sale_detail->sale();
+        $this->assertInstanceOf(belongsTo::class, $belongsTo);
+    }
+
+
+    public function test_getData_sale_and_saleDetail()
+    {
+        $sale = Sale::first();
+        $saleDetail = $sale->sale_detail;
+        $this->assertSame($sale->id, $saleDetail->sale_id);
+
+        $saleDetail = SaleDetail::first();
+        $sale = $saleDetail->sale;
+        $this->assertSame($saleDetail->sale_id, $sale->id);
+    }
+
+
+    // Test for relation between customer and sale details
+    public function test_relation_success_customer_and_sale_details()
+    {
+        // Check if customer has relation with sale
+        $customer = Customer::first();
+        $sale = $customer->sale;
+        $this->assertInstanceOf(Collection::class, $sale);
+
+        // Check if sale has relation with customer
+        $sale = Sale::first();
+        $customer = $sale->customer;
+        $this->assertInstanceOf(Customer::class, $customer);
+
+        // Check if customer has many sale 
+        $customer = Customer::first();
+        $sale = $customer->sale();
+        $this->assertInstanceOf(HasMany::class, $sale);
+
+        // Check if sale detail belongs to customer
+        $sale = Sale::first();
+        $customer = $sale->customer();
+        $this->assertInstanceOf(BelongsTo::class, $customer);
+    }
+
+    public function test_getData_customer_and_Sales()
+    {
+        $customer = Customer::first();
+        $saleDetails = $customer->sale;
+        if ($saleDetails->count() > 0) {
+            $this->assertSame($customer->id, $saleDetails->first()->customer_id);
+        }
+
+        $saleDetail = Sale::first();
+        $customer = $saleDetail->customer;
+        $this->assertSame($saleDetail->customer_id, $customer->id);
     }
 }
