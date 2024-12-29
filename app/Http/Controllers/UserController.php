@@ -60,7 +60,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email,exist',
+            'email' => 'required|string|email',
             'password' => 'required|string|'
         ]);
 
@@ -72,19 +72,32 @@ class UserController extends Controller
             ]);
         }
 
-        $login = Auth::attempt([
+        $is_login = Auth::attempt([
             'email' => $request->input('email'),
             'password' => $request->input('password')
-        ]) && Auth::user()->role === 'admin';
+        ]);
 
-        if ($login) {
+        $is_admin =  Auth::user()->role === 'admin';
+
+        if ($is_login && $is_admin) {
             $token = $request->user()->createToken('authToken')->plainTextToken;
             return response()->json([
                 'status' => true,
-                'message' => 'User logged in successfully',
+                'message' => 'Admin logged in successfully',
                 'data' => Auth::user(),
                 'token' => $token,
             ]);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'User logged in successfully',
+                'data' => Auth::user()
+            ]);
         }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'email or password is wrong',
+        ]);
     }
 }
