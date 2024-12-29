@@ -26,6 +26,9 @@ paths:
                 password:
                   type: string
                   format: password
+                registration_code:
+                  type: string
+                  
       responses:
         '201':
           description: OK
