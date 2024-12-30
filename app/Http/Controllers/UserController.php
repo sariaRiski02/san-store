@@ -60,7 +60,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
+            'email' => 'required|string|email|exists:users,email',
             'password' => 'required|string|'
         ]);
 
@@ -99,5 +99,21 @@ class UserController extends Controller
             'status' => false,
             'message' => 'email or password is wrong',
         ]);
+    }
+
+
+    public function logout(Request $request)
+    {
+        $user = $request->get('authenticated_user');
+        if (!$user->tokens()->delete()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Logout failed'
+            ], 500);
+        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Logged out successfully'
+        ], 200);
     }
 }

@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('product_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->string('base_unit');
-            $table->unsignedInteger('factor_base_unit');
-            $table->decimal('unit_price', 10, 2);
-            $table->decimal('base_price', 10, 2);
-            $table->decimal('discount', 10, 2);
+            $table->string('base_unit')->nullable();
+            $table->unsignedInteger('factor_base_unit')->nullable();
+            $table->decimal('unit_price', 10, 2)->nullable();
+            $table->decimal('base_price', 10, 2)->nullable();
+            $table->decimal('discount', 10, 2)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

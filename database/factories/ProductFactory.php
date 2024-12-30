@@ -20,7 +20,6 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->word(),
             'code_item' => fake()->unique()->randomNumber(),
-            'price' => fake()->randomFloat(2, 1, 1000),
             'description' => fake()->sentence(),
             'category_id' => Category::inrandomOrder()->first()->id,
         ];

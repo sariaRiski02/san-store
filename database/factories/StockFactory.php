@@ -25,6 +25,7 @@ class StockFactory extends Factory
         $id = $diff[$rand_id];
         return [
             'product_id' => $id,
+            'quantity_base_unit' => fake()->randomFloat(2, 1, 1000),
             'quantity' => fake()->randomNumber(2),
         ];
     }
