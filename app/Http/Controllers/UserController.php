@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Rules\RegistrationRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -16,10 +18,11 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string|confirmed',
-            'code_register' => 'string|nullable',
+            'registration_code' => ['string', 'nullable', new RegistrationRule],
         ]);
 
         $role = 'user';
+
         if ($request->input('registration_code') === env('REGISTRATION_CODE')) {
             $role = 'admin';
         }
@@ -69,7 +72,7 @@ class UserController extends Controller
                 'status' => false,
                 'message' => 'Validation error',
                 'errors' => $validator->errors(),
-            ]);
+            ], 402);
         }
 
         $is_login = Auth::attempt([
@@ -77,17 +80,14 @@ class UserController extends Controller
             'password' => $request->input('password')
         ]);
 
-        $is_admin =  Auth::user()->role === 'admin';
-
-        if ($is_login && $is_admin) {
-            $token = $request->user()->createToken('authToken')->plainTextToken;
+        if (!$is_login) {
             return response()->json([
-                'status' => true,
-                'message' => 'Admin logged in successfully',
-                'data' => Auth::user(),
-                'token' => $token,
-            ]);
-        } else {
+                'status' => false,
+                'message' => 'email or password is wrong',
+            ], 404);
+        }
+
+        if (Auth::user()->role !== 'admin') {
             return response()->json([
                 'status' => true,
                 'message' => 'User logged in successfully',
@@ -95,9 +95,12 @@ class UserController extends Controller
             ]);
         }
 
+        $token = $request->user()->createToken('authToken')->plainTextToken;
         return response()->json([
-            'status' => false,
-            'message' => 'email or password is wrong',
+            'status' => true,
+            'message' => 'Admin logged in successfully',
+            'data' => Auth::user(),
+            'token' => $token,
         ]);
     }
 
@@ -115,5 +118,13 @@ class UserController extends Controller
             'status' => true,
             'message' => 'Logged out successfully'
         ], 200);
+    }
+
+
+    public function check(Request $request)
+    {
+        $request->validate(['token' => 'required|string']);
+        $token = $request->input('token');
+        return PersonalAccessToken::findToken($token) ? true : false;
     }
 }

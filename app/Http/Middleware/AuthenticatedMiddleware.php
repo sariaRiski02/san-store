@@ -18,6 +18,7 @@ class AuthenticatedMiddleware
     {
         $AuthorizationToken = $request->header('Authorization');
 
+
         // cek jika ada token dan token memiliki awalan bearer
         if (!$AuthorizationToken || !str_starts_with($AuthorizationToken, "Bearer ")) {
             return response()->json([

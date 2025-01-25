@@ -14,7 +14,7 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'code_item' => 'required|string',
+            'code_item' => 'required|string|unique:products,code_item',
             'description' => 'string|nullable',
             'category_id' => 'required|integer',
             'base_unit' => 'string|nullable',
@@ -32,7 +32,7 @@ class ProductController extends Controller
                 'status' => false,
                 'message' => 'Validation error',
                 'errors' => $validator->errors()
-            ]);
+            ], 422);
         }
 
 
@@ -163,8 +163,6 @@ class ProductController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-
-
         return response()->json([
             'status' => true,
             'message' => 'Updated product is successfully',

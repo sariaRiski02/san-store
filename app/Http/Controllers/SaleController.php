@@ -13,11 +13,12 @@ class SaleController extends Controller
     {
         $product = Product::where('code_item', $code_item)->first();
 
+
         if (!$product) {
             return response()->json([
                 'status' => false,
                 'message' => 'Get product not found'
-            ]);
+            ], 404);
         }
 
         return response()->json([
